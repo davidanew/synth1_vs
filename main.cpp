@@ -9,10 +9,6 @@ be audible
 
 #include "main.h"
 
-//One voice for each key press
-//TODO: move voice bank to cpp vector and put this in main
-const uint32_t num_voices {16};
-
 void output_sample (std::unordered_map<int, Voice>& voice_map, const uint64_t sample_tick_local, Dac &dac1, Filter &filter);
 
 int main () {
@@ -22,7 +18,7 @@ int main () {
 		/************Tests here ******************/
 		//Tests::uart();
 		//Tests::uart_fast();
-		//Tests::original_main();
+		Tests::original_main();
 		/**********End of tests *****************/
 	
 		//Hal init always needs to be run
@@ -38,28 +34,24 @@ int main () {
 		Dac dac2_led(DAC_CHANNEL_2);
 		//Stores last processed sample
 		uint64_t sample_tick_local = 0;
-		//All current voices, uses dynamic binding
-		//Voice* voice_array[num_voices] = {nullptr};
+		//All current voices
 		std::unordered_map<int, Voice> voice_map;
 		//Holds parameters that are common to all voices
-		Parameters parameters;
+		Global_parameters global_parameters;
 		//TODO: Filter will need to be updated on dial change
 		//what to stat-up with, do we need a last state save?
-		Filter filter {1000, (float)0.0}
-		;
+		Filter filter {1000, (float)0.0};
 		//Move clock to full frequency
 		Clocks::SystemClock_Config();
-	
-		try {
-			//TODO: These will also need to be set with dial
-			//make sure deconstructed properly when changed
-			parameters.wave_1 = new Sine();
-			parameters.wave_2 = new Sine();		
-			//voice_array[0] = new Voice(40000,parameters, 1000, 1.0);
-		}
-		catch (...) {
-			while (1) ;
-		}	
+//		try {
+//			//TODO: These will also need to be set with dial
+//			//make sure deconstructed properly when changed
+//			parameters.wave_1 = new Sine();
+//			parameters.wave_2 = new Sine();		
+//		}
+//		catch (...) {
+//			while (1) ;
+//		}	
 		//currently using dac channel 2 to measure run loop execution time
 		dac2_led.low();
 		//Set local tick value so there is not a large delta when the first
@@ -72,10 +64,12 @@ int main () {
 				if (Usart_1::is_data_ready()) {
 
 					if (voice_map.find(1) == voice_map.end()) {
-						voice_map[1] = Voice(40000, parameters, 1000, 1.0);
-						//voice_map.emplace(40000,parameters, 1000, 1.0)
+						//move sample rate to voice
+						//freq and velocity ok for now
+						//parameters enum for wave type
+						voice_map[1] = Voice(global_parameters, 1000, 1.0);
+						//voice_map.insert(std::make_pair(1, Voice(40000, parameters, 1000, 1.0)));
 					}
-
 				}		
 			}
 			//wait for next sample tick
@@ -91,32 +85,16 @@ int main () {
 	catch (...) {
 		while (1) ;
 	}	
-	
-	
 }
 
-
-
-//TODO: put in side effect warning
 void output_sample (std::unordered_map<int, Voice>& voice_map, const uint64_t sample_tick_local, Dac &dac1, Filter &filter)
 {
-	//uint32_t i {0};
 	float total {0};
 	//Loop though all voices and get the sample for the valid voices
-	//Add to total output value
-	//
-	//for (i=0 ; i<num_voices ; i++){
-	//	if (voice_array[i] != nullptr) {
-	//		total += (float) 1 * voice_array[i]->get_value(sample_tick_local);
-	//	}
-	//}
-	
 	for (auto & pair : voice_map){
-		total += (float) 1 * pair.second.get_value(sample_tick_local);	
+		//TODO: split this up to make types clearer
+		total += (float) 1 * pair.second.update_and_get_sample(sample_tick_local);	
 	}
-	
-	//std::unordered_map<int, Voice>::iterator my_iter = voice_map.begin();
-
 	//_rel means value from 0 to 1
 	const float total_rel = total * (float) 0.5 + (float) 0.5; 	
 	const float filtered_rel = filter.next_sample(total_rel);

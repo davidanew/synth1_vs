@@ -23,8 +23,7 @@ VisualGDB/Debug/Fitler.o: Fitler.cpp Filter.h \
  c:\sysgcc\arm-eabi\arm-eabi\sys-include\_ansi.h \
  c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\bits\std_abs.h \
  c:\sysgcc\arm-eabi\arm-eabi\sys-include\stdlib.h \
- c:\sysgcc\arm-eabi\arm-eabi\sys-include\machine\stdlib.h \
- c:\sysgcc\arm-eabi\arm-eabi\sys-include\alloca.h
+ c:\sysgcc\arm-eabi\arm-eabi\sys-include\machine\stdlib.h
 
 Filter.h:
 
@@ -77,5 +76,3 @@ c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\bits\std_abs.h:
 c:\sysgcc\arm-eabi\arm-eabi\sys-include\stdlib.h:
 
 c:\sysgcc\arm-eabi\arm-eabi\sys-include\machine\stdlib.h:
-
-c:\sysgcc\arm-eabi\arm-eabi\sys-include\alloca.h:
