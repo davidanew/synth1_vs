@@ -1,10 +1,9 @@
 /*
 Two sections, intialisation and run loop
-run loop never exits and execution of each pass is delayed until the next sample tick
+run loop never exits:
+	Handle midi
+	Wait until sample tick and then output waveform
 The sample tick is updated by TIM2 IRQ
-The sample is output at the end of the run loop
-This could cause some jitter should be too small to
-be audible
 */
 
 #include "main.h"
