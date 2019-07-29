@@ -4,32 +4,15 @@
 #define VOICE_H 1
 
 #include <memory>
-
 #include "Global_parameters.h"
-
 extern "C" {
 	#include "stm32f4xx_hal.h"
 }
 
-//struct Voice_parameters
-//{
-//	float freq_1 {1000}	;
-//	float freq_2 {1000}	;
-//	float velocity {0}	;
-//	uint64_t previous_sample_tick {0}	;
-//	float phase_rel_1 {0}	;
-//	float phase_rel_2 {0}	;
-//	float phase_rel_per_tick_1 {0}	;
-//	float phase_rel_per_tick_2 {0}	;
-//};
-
 class Voice {
 	Global_parameters global_parameters;
-//	Voice_parameters voice_parameters;
-
-	std::shared_ptr<Sine> wave_1;
-	std::shared_ptr<Sine> wave_2;
-	
+	std::shared_ptr<Wave> wave_1;
+	std::shared_ptr<Wave> wave_2;
 	float freq_1 {1000}	;
 	float freq_2 {1000}	;
 	float velocity {0}	;
@@ -38,7 +21,6 @@ class Voice {
 	float phase_rel_2 {0}	;
 	float phase_rel_per_tick_1 {0}	;
 	float phase_rel_per_tick_2 {0}	;
-
 public:		
 	Voice(const Global_parameters&, const uint32_t&, const float&);
 	Voice() = default;

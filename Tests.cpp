@@ -43,7 +43,7 @@ void Tests::original_main() {
 	uint64_t sample_tick_local = 0;
 	std::unordered_map<int, Voice> voice_map;
 	Global_parameters global_parameters;
-	Filter filter {1000,(float)0.0};
+	//Filter filter {1000,(float)0.0};
 	Clocks::SystemClock_Config();
 	try{
 		voice_map[1] = Voice(global_parameters, 1000, 1.0);
@@ -60,8 +60,8 @@ void Tests::original_main() {
 			total += (float) 1 * pair.second.update_and_get_sample(sample_tick_local);	
 		}
 		const float total_rel = total * (float) 0.5 + (float) 0.5; 	
-		const float filtered_rel = filter.next_sample(total_rel);
-		dac1.set_value_rel(filtered_rel);
+		//const float filtered_rel = filter.next_sample(total_rel);
+		dac1.set_value_rel(total_rel);
 	}
 }
 

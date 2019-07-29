@@ -18,7 +18,7 @@ int main () {
 		/************Tests here ******************/
 		//Tests::uart();
 		//Tests::uart_fast();
-		Tests::original_main();
+		//Tests::original_main();
 		/**********End of tests *****************/
 	
 		//Hal init always needs to be run
@@ -39,7 +39,7 @@ int main () {
 		//Holds parameters that are common to all voices
 		Global_parameters global_parameters;
 		//TODO: Filter will need to be updated on dial change
-		//what to stat-up with, do we need a last state save?
+		//what to start-up with, do we need a last state save?
 		Filter filter {1000, (float)0.0};
 		//Move clock to full frequency
 		Clocks::SystemClock_Config();

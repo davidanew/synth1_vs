@@ -13,9 +13,9 @@ void Wave::set_ptr(float* &data_ptr){
 
 Wave::Wave(){
 }
-//Not deallocating waveforms as they are always needed
-Wave::~Wave(){
-}
+////Not deallocating waveforms as they are always needed
+//Wave::~Wave(){
+//}
 
 Wave::Wave(Wave &source){//error on copy
 	(void)source;
@@ -38,8 +38,8 @@ Square::Square(){
 }
 
 float*  Square::data_ptr = nullptr;
-Square::~Square(){
-}
+//Square::~Square(){
+//}
 
 //Fill memory with square waves
 void Square::fill_memory(){
@@ -64,14 +64,13 @@ Sine::Sine(){
 
 float*  Sine::data_ptr = nullptr;
 
-Sine::~Sine(){
-}
+//Sine::~Sine(){
+//}
 
 void Sine::fill_memory(){
 	uint32_t i {0};
 	for(i=0 ; i < num_samples ; i++){
 		float phase_radians = (float)i/(float)num_samples  * (float) 6.28318530718;
-		//uint32_t value = (uint32_t) ((float)0xFFF*(0.5+0.5*sin(phase_radians)));
 		float value = (float) sin(phase_radians);
 		data_ptr[i] = value;	
 	}
@@ -86,9 +85,6 @@ Noise::Noise(){
 }
 
 float*  Noise::data_ptr = nullptr;
-
-Noise::~Noise(){
-}
 
 void Noise::fill_memory(){
 }

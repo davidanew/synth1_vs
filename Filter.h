@@ -1,5 +1,7 @@
 /*IIR filter that allows low pass and peaking*/
 
+//TODO:need 'amount'
+
 #ifndef FILTER_H
 #define FILTER_H 1
 

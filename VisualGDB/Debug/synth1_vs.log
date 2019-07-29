@@ -1,7 +1,5 @@
 ﻿  main.cpp
-  Tests.cpp
-  Voice.cpp
   Linking ../VisualGDB/Debug/synth1_vs...
   ------------------- Memory utilization report -------------------
-  Used FLASH: 43KB out of 512KB (8%) [+72]
-  Used SRAM: 344 bytes out of 128KB (0%)
+  Used FLASH: 43KB out of 512KB (8%) [-1284]
+  Used SRAM: 348 bytes out of 128KB (0%) [-64]
