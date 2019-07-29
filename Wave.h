@@ -20,7 +20,6 @@ protected:
 
 public:
 	Wave();
-//	virtual ~Wave() =0;
 	[[noreturn]] Wave(Wave &wave);
 	virtual float get_value(float phase_rel) const =0;
 };
@@ -30,8 +29,9 @@ class Square : public Wave {
 	static float* data_ptr;
 public:
 	Square();	
-//	~Square();	
-  float get_value(float phase_rel) const;
+	static void init_storage();
+
+	float get_value(float phase_rel) const;
 };
 
 class Sine : public Wave{
@@ -39,8 +39,8 @@ class Sine : public Wave{
 	static float* data_ptr;
 public:
 	Sine();	
-//	~Sine();
-  float get_value(float phase_rel) const;
+	static void init_storage();
+	float get_value(float phase_rel) const;
 };
 
 class Noise : public Wave{
@@ -48,8 +48,7 @@ class Noise : public Wave{
 	static float* data_ptr;
 public:
 	Noise();	
-//	~Noise();
-  float get_value(float phase_rel) const;
+	float get_value(float phase_rel) const;
 };
 
 

@@ -14,13 +14,11 @@ void output_sample (std::unordered_map<int, Voice>& voice_map, const uint64_t sa
 int main () {
 	try
 	{
-	
 		/************Tests here ******************/
 		//Tests::uart();
 		//Tests::uart_fast();
-		//Tests::original_main();
-		/**********End of tests *****************/
-	
+		//Tests::output_waveform();
+		/**********End of tests *****************/	
 		//Hal init always needs to be run
 		Hal::init();
 		//TIM2 used to to update sample clock
@@ -43,15 +41,9 @@ int main () {
 		Filter filter {1000, (float)0.0};
 		//Move clock to full frequency
 		Clocks::SystemClock_Config();
-//		try {
-//			//TODO: These will also need to be set with dial
-//			//make sure deconstructed properly when changed
-//			parameters.wave_1 = new Sine();
-//			parameters.wave_2 = new Sine();		
-//		}
-//		catch (...) {
-//			while (1) ;
-//		}	
+		//TODO: Put these in a seperate function (Could be static in wave class)
+		Sine::init_storage();
+		Square::init_storage();
 		//currently using dac channel 2 to measure run loop execution time
 		dac2_led.low();
 		//Set local tick value so there is not a large delta when the first
@@ -62,13 +54,12 @@ int main () {
 			{
 				//handle midi
 				if (Usart_1::is_data_ready()) {
-
+					//test line, needs proper comparison
 					if (voice_map.find(1) == voice_map.end()) {
 						//move sample rate to voice
 						//freq and velocity ok for now
 						//parameters enum for wave type
 						voice_map[1] = Voice(global_parameters, 1000, 1.0);
-						//voice_map.insert(std::make_pair(1, Voice(40000, parameters, 1000, 1.0)));
 					}
 				}		
 			}

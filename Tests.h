@@ -16,7 +16,7 @@ class Tests {
 public:
 	static void uart(void);
 	static void uart_fast(void);
-	static void original_main(void);
+	static void output_waveform(void);
 	[[noreturn]] Tests(Tests &source);
 	[[noreturn]] Tests();
 

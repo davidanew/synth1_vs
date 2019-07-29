@@ -36,7 +36,7 @@ void Tests::uart_fast(void) {
 }
 
 
-void Tests::original_main() {
+void Tests::output_waveform() {
 	Hal::init();
 	Tim::init();
 	Dac dac1(DAC_CHANNEL_1);
