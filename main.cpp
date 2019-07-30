@@ -26,7 +26,7 @@ int main () {
 		//TIM2 used to to update sample clock
 		Tim::init();
 		//MIDI input
-		Usart_1::init();
+		Midi_in::init();
 		//Dac 1 used for audio output
 		//Note Dac can't be static as we are sharing the class
 		Dac dac1(DAC_CHANNEL_1);
@@ -42,7 +42,7 @@ int main () {
 		//what to start-up with, do we need a last state save?
 		Filter filter {1000, (float)0.0};
 		//Move clock to full frequency
-		Clocks::SystemClock_Config();
+//		Clocks::SystemClock_Config();
 		//TODO: Put these in a seperate function (Could be static in wave class)
 		Sine::init_storage();
 		Square::init_storage();
@@ -55,14 +55,22 @@ int main () {
 		while (1) {
 			{
 				//handle midi
-				if (Usart_1::is_data_ready()) {
+				//while(!Usart_1::is_data_ready());
+				if (Midi_in::is_data_ready()) {
 					//test line, needs proper comparison
-					if (voice_map.find(1) == voice_map.end()) {
-						//move sample rate to voice
-						//freq and velocity ok for now
-						//parameters enum for wave type
-						voice_map[1] = Voice(global_parameters, 1000, 1.0);
-					}
+//					if (voice_map.find(1) == voice_map.end()) {
+//						//move sample rate to voice
+//						//freq and velocity ok for now
+//						//parameters enum for wave type
+//						voice_map[1] = Voice(global_parameters, 1000, 1.0);
+//					}
+					Midi_in::receive_byte_and_handle(
+						[&](Note_on_struct note_on_struct) {
+							voice_map[1] = Voice(global_parameters, 1000, 1.0);
+						}, 
+						[&](Controller_change_struct controller_change_struct) {
+							voice_map[1] = Voice(global_parameters, 100, 1.0);
+						});					
 				}		
 			}
 			//wait for next sample tick
