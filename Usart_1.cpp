@@ -53,15 +53,16 @@ Usart_1::Usart_1(){
 Midi_state Midi_in::state = {wait_status_byte};
 
 //TODO: maybe pass handler in here
-void Midi_in::receive_byte_and_handle() {
+void Midi_in::receive_byte_and_handle(std::function<void(Note_on_struct)> note_on_handler, std::function<void(Controller_change_struct)> controller_change_handler) {
 	uint8_t buffer_arr[1] {0};
 	receive(buffer_arr, 1);
-	handle_midi_byte(buffer_arr[0]);
+	handle_midi_byte(buffer_arr[0], note_on_handler, controller_change_handler);
 }
 
-//enum Midi_state { wait_status_byte, wait_note_number, wait_velocity, wait_controller_number, wait_controller_data };
-
-void Midi_in::handle_midi_byte(uint8_t midi_byte) {
+void Midi_in::handle_midi_byte(uint8_t midi_byte, std::function<void(Note_on_struct)> note_on_handler, std::function<void(Controller_change_struct)> controller_change_handler) {
+//	std::function<bool(char)> is_status_byte_lambda = [](char midi_byte) {
+//		return ((midi_byte & 1 << 7) == (1 << 7));
+//	};		
 	switch (state) {
 	case (wait_status_byte): 
 		if (is_status_byte(midi_byte))
@@ -84,16 +85,21 @@ void Midi_in::handle_midi_byte(uint8_t midi_byte) {
 	case (wait_velocity):
 		if (is_status_byte(midi_byte))
 			state = get_next_state_from_status_byte(midi_byte);
-		else 
+		else {
 			state = wait_status_byte;
 			//handle note
+			Note_on_struct note_on_struct {};
+			note_on_handler(note_on_struct);
+		}
 		break;
 	case (wait_controller_data):
 		if (is_status_byte(midi_byte))
 			state = get_next_state_from_status_byte(midi_byte);
-		else 
+		else {
 			state = wait_status_byte;
-			//handle controller data
+			Controller_change_struct controller_change_struct {} ;
+			controller_change_handler(controller_change_struct);
+		}
 		break;
 	default:
 		state = wait_status_byte;
@@ -101,19 +107,17 @@ void Midi_in::handle_midi_byte(uint8_t midi_byte) {
 	}		
 }
 
-//enum Status_message { note_on,  control_change, unsuppoted_status_byte , not_status_byte };
-
 //See https://www.songstuff.com/recording/article/midi_message_format/
 Midi_state Midi_in::get_next_state_from_status_byte(uint8_t midi_byte){
-	if ((midi_byte & 1 << 7) == (1 << 7)) {
-		//it is a status byte
+	if (is_status_byte(midi_byte)) {
 		if((midi_byte & 9 << 4) == (9 << 4)) return wait_note_number; //it was note on
-		else if((midi_byte & 0xB << 4) == (0xB << 4)) return wait_controller_number; //it controller change
+		else if((midi_byte & 0xB << 4) == (0xB << 4)) return wait_controller_number; //it was a controller change
 		else return wait_status_byte; //unsupported status byte
 	}
 	else return wait_status_byte;
 }
 
-bool is_status_byte(uint8_t midi_byte) {
+//TODO: remove this if lambda works out
+bool Midi_in::is_status_byte(uint8_t midi_byte) {
 	return ((midi_byte & 1 << 7) == (1 << 7));
 }

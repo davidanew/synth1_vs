@@ -2,6 +2,8 @@
 #define USART_1_H 1
 
 #include "stm32f4xx_hal.h"
+#include <functional>
+#include "Shared_structs.h"
 
 class Usart_1 {
 	static UART_HandleTypeDef huart1 ;
@@ -20,11 +22,12 @@ enum Midi_state { wait_status_byte, wait_note_number, wait_velocity, wait_contro
 
 class Midi_in : public Usart_1 {
 	static Midi_state state;
-	static void handle_midi_byte(uint8_t);
+	//static void handle_midi_byte(uint8_t);
+	static void handle_midi_byte(uint8_t , std::function<void(Note_on_struct)> , std::function<void(Controller_change_struct)> );
 	static Midi_state get_next_state_from_status_byte(uint8_t);
 	static bool is_status_byte(uint8_t);
 public:
-	static void receive_byte_and_handle(void);
+	static void receive_byte_and_handle(std::function<void(Note_on_struct)>, std::function<void(Controller_change_struct)>);
 };
 
 #endif

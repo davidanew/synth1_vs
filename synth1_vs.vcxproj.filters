@@ -764,5 +764,8 @@
     <ClInclude Include="Global_parameters.h">
       <Filter>Source files</Filter>
     </ClInclude>
+    <ClInclude Include="Shared_structs.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,6 @@
-﻿  Usart_1.cpp
+﻿  main.cpp
+  Tests.cpp
+  Usart_1.cpp
   Linking ../VisualGDB/Debug/synth1_vs...
   ------------------- Memory utilization report -------------------
   Used FLASH: 43KB out of 512KB (8%)

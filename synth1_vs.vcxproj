@@ -67,6 +67,7 @@
     <ClCompile Include="Usart_2_vcom.cpp" />
     <ClCompile Include="Voice.cpp" />
     <ClCompile Include="Wave.cpp" />
+    <ClInclude Include="Shared_structs.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="Tim.h" />
     <ClInclude Include="Usart_1.h" />

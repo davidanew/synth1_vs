@@ -200,7 +200,9 @@ VisualGDB/Debug/Tests.o: Tests.cpp Tests.h Dac.h \
  c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\cmath \
  c:\sysgcc\arm-eabi\arm-eabi\sys-include\math.h \
  c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\stdlib.h Filter.h \
- Usart_1.h Usart_2_vcom.h Clocks.h \
+ Usart_1.h c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\functional \
+ c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\bits\std_function.h \
+ Shared_structs.h Usart_2_vcom.h Clocks.h \
  c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\unordered_map \
  c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\bits\hashtable.h \
  c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\bits\hashtable_policy.h \
@@ -623,6 +625,12 @@ c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\stdlib.h:
 Filter.h:
 
 Usart_1.h:
+
+c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\functional:
+
+c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\bits\std_function.h:
+
+Shared_structs.h:
 
 Usart_2_vcom.h:
 

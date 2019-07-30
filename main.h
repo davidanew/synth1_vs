@@ -9,6 +9,8 @@
 #include "Usart_2_vcom.h"
 #include "Tests.h"
 #include <unordered_map>
+#include "Shared_structs.h"
+
 
 
 
