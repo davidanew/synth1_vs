@@ -8,9 +8,8 @@ The sample tick is updated by TIM2 IRQ
 
 #include "main.h"
 
-void output_sample (std::unordered_map<int, Voice>& voice_map, const uint64_t sample_tick_local, Dac &dac1, Filter &filter);
-
-
+void output_sample (std::unordered_map<int, Voice>&, const uint64_t, Dac&, Filter&);
+void handle_note_on(const Note_on_struct&, std::unordered_map<int, Voice>&, const Global_parameters&);
 
 
 int main () {
@@ -23,6 +22,8 @@ int main () {
 		/**********End of tests *****************/	
 		//Hal init always needs to be run
 		Hal::init();
+		//Move clock to full frequency
+		Clocks::SystemClock_Config();
 		//TIM2 used to to update sample clock
 		Tim::init();
 		//MIDI input
@@ -41,8 +42,6 @@ int main () {
 		//TODO: Filter will need to be updated on dial change
 		//what to start-up with, do we need a last state save?
 		Filter filter {1000, (float)0.0};
-		//Move clock to full frequency
-//		Clocks::SystemClock_Config();
 		//TODO: Put these in a seperate function (Could be static in wave class)
 		Sine::init_storage();
 		Square::init_storage();
@@ -66,7 +65,9 @@ int main () {
 //					}
 					Midi_in::receive_byte_and_handle(
 						[&](Note_on_struct note_on_struct) {
-							voice_map[1] = Voice(global_parameters, 1000, 1.0);
+							//voice_map[1] = Voice(global_parameters, 1000, 1.0);
+							handle_note_on(note_on_struct, voice_map, global_parameters);
+							
 						}, 
 						[&](Controller_change_struct controller_change_struct) {
 							voice_map[1] = Voice(global_parameters, 100, 1.0);
@@ -88,6 +89,15 @@ int main () {
 	}	
 }
 
+void handle_note_on(const Note_on_struct& note_on_struct, std::unordered_map<int, Voice>& voice_map, const Global_parameters& global_parameters){
+	if (note_on_struct.velocity == 0){
+		voice_map.erase(1);
+	} else 	{
+		voice_map[1] = Voice(global_parameters, 1000, 1.0);
+	}
+} 
+	
+	
 void output_sample (std::unordered_map<int, Voice>& voice_map, const uint64_t sample_tick_local, Dac &dac1, Filter &filter)
 {
 	float total {0};

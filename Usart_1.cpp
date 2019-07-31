@@ -52,6 +52,9 @@ Usart_1::Usart_1(){
 
 Midi_state Midi_in::state = {wait_status_byte};
 
+Note_on_struct Midi_in::note_on_struct = {};
+Controller_change_struct Midi_in::controller_change_struct = {};
+
 void Midi_in::receive_byte_and_handle(std::function<void(Note_on_struct)> note_on_handler, std::function<void(Controller_change_struct)> controller_change_handler) {
 	uint8_t buffer_arr[1] {0};
 	receive(buffer_arr, 1);
@@ -70,31 +73,35 @@ void Midi_in::handle_midi_byte(uint8_t midi_byte, std::function<void(Note_on_str
 		if (is_status_byte(midi_byte))
 			state = get_next_state_from_status_byte(midi_byte);
 		else 
+			note_on_struct.note_number = midi_byte;
 			state = wait_velocity;
 		break;
 	case (wait_controller_number):
 		if (is_status_byte(midi_byte))
 			state = get_next_state_from_status_byte(midi_byte);
 		else 
+			controller_change_struct.controller_number = midi_byte;
 			state = wait_controller_data;
 		break;
 	case (wait_velocity):
 		if (is_status_byte(midi_byte))
 			state = get_next_state_from_status_byte(midi_byte);
 		else {
-			state = wait_status_byte;
 			//handle note
-			Note_on_struct note_on_struct {};
+			//Note_on_struct note_on_struct {};
+			note_on_struct.velocity = midi_byte;
 			note_on_handler(note_on_struct);
+			state = wait_status_byte;			
 		}
 		break;
 	case (wait_controller_data):
 		if (is_status_byte(midi_byte))
 			state = get_next_state_from_status_byte(midi_byte);
 		else {
-			state = wait_status_byte;
-			Controller_change_struct controller_change_struct {} ;
+			//Controller_change_struct controller_change_struct {} ;#
+			controller_change_struct.controller_data = midi_byte;
 			controller_change_handler(controller_change_struct);
+			state = wait_status_byte;
 		}
 		break;
 	default:

@@ -15,14 +15,16 @@ public:
 	[[noreturn]] Usart_1();
 };
 
-
 enum Midi_state { wait_status_byte, wait_note_number, wait_velocity, wait_controller_number, wait_controller_data };
-//enum Status_message { note_on, control_change, unsuppoted_status_byte , not_status_byte };
-
 
 class Midi_in : public Usart_1 {
 	static Midi_state state;
-	//static void handle_midi_byte(uint8_t);
+	static Note_on_struct note_on_struct;
+	static Controller_change_struct controller_change_struct;
+	//static uint8_t note_number;
+	//static uint8_t velocity;
+	//static uint8_t controller_number;
+	//static uint8_t controller_data;
 	static void handle_midi_byte(uint8_t , std::function<void(Note_on_struct)> , std::function<void(Controller_change_struct)> );
 	static Midi_state get_next_state_from_status_byte(uint8_t);
 	static bool is_status_byte(uint8_t);

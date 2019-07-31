@@ -1,5 +1,7 @@
 ﻿  main.cpp
+  Tests.cpp
+  Usart_1.cpp
   Linking ../VisualGDB/Debug/synth1_vs...
   ------------------- Memory utilization report -------------------
-  Used FLASH: 43KB out of 512KB (8%)
-  Used SRAM: 352 bytes out of 128KB (0%)
+  Used FLASH: 47KB out of 512KB (9%) [+24]
+  Used SRAM: 360 bytes out of 128KB (0%) [+8]
