@@ -13,6 +13,8 @@ extern "C" {
 
 class Wave {
 protected:
+	//One cycle of the waveform is held in memory
+	//4000 samples held as this matches the 12 bit resolution of the ADC
 	const uint32_t num_samples {4000};
 	virtual void fill_memory() =0;
 	virtual float get_value_wptr(float* data_ptr, float phase_rel) const ;

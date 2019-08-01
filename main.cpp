@@ -11,7 +11,6 @@ The sample tick is updated by TIM2 IRQ
 void output_sample (std::unordered_map<int, Voice>&, const uint64_t, Dac&, Filter&);
 void handle_note_on(const Note_on_struct&, std::unordered_map<int, Voice>&, const Global_parameters&);
 
-
 int main () {
 	try
 	{
@@ -52,25 +51,20 @@ int main () {
 		sample_tick_local = IRQ_objects::sample_tick;
 		/*main run loop, never exits*/
 		while (1) {
+			//TODO: Remove extra braces or move to another funtion
 			{
-				//handle midi
-				//while(!Usart_1::is_data_ready());
+				//On start of run loop check to see if there is midi data ready
+				//If not then move straight on to voice output
+				//TODO: Need to check the delay of this section 
 				if (Midi_in::is_data_ready()) {
-					//test line, needs proper comparison
-//					if (voice_map.find(1) == voice_map.end()) {
-//						//move sample rate to voice
-//						//freq and velocity ok for now
-//						//parameters enum for wave type
-//						voice_map[1] = Voice(global_parameters, 1000, 1.0);
-//					}
+					//The recieve function also triggers the midi handling
+					//The handlers are passed in as lambdas
 					Midi_in::receive_byte_and_handle(
 						[&](Note_on_struct note_on_struct) {
-							//voice_map[1] = Voice(global_parameters, 1000, 1.0);
 							handle_note_on(note_on_struct, voice_map, global_parameters);
-							
 						}, 
 						[&](Controller_change_struct controller_change_struct) {
-							voice_map[1] = Voice(global_parameters, 100, 1.0);
+							//controller change code goes here
 						});					
 				}		
 			}
@@ -80,7 +74,8 @@ int main () {
 			dac2_led.high();
 			//Reset variable for next sample
 			sample_tick_local = IRQ_objects::sample_tick;	
-			output_sample(voice_map, sample_tick_local, dac1, filter);		
+			output_sample(voice_map, sample_tick_local, dac1, filter);
+			//Indicates processing finished
 			dac2_led.low();	
 		}
 	}
@@ -89,25 +84,30 @@ int main () {
 	}	
 }
 
+//Update voice map for "Note On" message 
 void handle_note_on(const Note_on_struct& note_on_struct, std::unordered_map<int, Voice>& voice_map, const Global_parameters& global_parameters){
 	if (note_on_struct.velocity == 0){
+		//note on with zero velocity means key has been released
 		voice_map.erase(1);
 	} else 	{
 		voice_map[1] = Voice(global_parameters, 1000, 1.0);
 	}
 } 
 	
-	
+//This is run for every sample tick
+//Outputs the sample based on voices in voice map and also uses the filter
 void output_sample (std::unordered_map<int, Voice>& voice_map, const uint64_t sample_tick_local, Dac &dac1, Filter &filter)
 {
 	float total {0};
 	//Loop though all voices and get the sample for the valid voices
+	//Add these to total
 	for (auto & pair : voice_map){
 		//TODO: split this up to make types clearer
 		total += (float) 1 * pair.second.update_and_get_sample(sample_tick_local);	
 	}
 	//_rel means value from 0 to 1
 	const float total_rel = total * (float) 0.5 + (float) 0.5; 	
+	//Calculate filtered value
 	const float filtered_rel = filter.next_sample(total_rel);
 	//Output the computed sample to DAC
 	dac1.set_value_rel(filtered_rel);

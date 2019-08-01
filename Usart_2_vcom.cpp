@@ -2,6 +2,7 @@
 
 UART_HandleTypeDef Usart_2_vcom::huart2 = {};
 
+//Init code from CubeMX
 void Usart_2_vcom::init(void)
 {
   __HAL_RCC_USART2_CLK_ENABLE();

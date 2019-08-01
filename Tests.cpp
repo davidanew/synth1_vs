@@ -1,9 +1,7 @@
 #include "Tests.h"
 
-//TODO: need to try quick read
-
+//Echo uart1 input to uart2 (debbuger virtual com port)
 void Tests::uart(void) {
-  //testing code
 	Hal::init();
 	//MIDI input
 	Usart_1::init();
@@ -18,6 +16,8 @@ void Tests::uart(void) {
 	}
 }
 
+//Echo uart1 input to uart2 (debbuger virtual com port)
+//Uses is_data_ready()
 void Tests::uart_fast(void) {
   //testing code
 	Hal::init();
@@ -35,7 +35,7 @@ void Tests::uart_fast(void) {
 	}
 }
 
-
+//Outputs a waveform
 void Tests::output_waveform() {
 	Hal::init();
 	Tim::init();
@@ -43,7 +43,6 @@ void Tests::output_waveform() {
 	uint64_t sample_tick_local = 0;
 	std::unordered_map<int, Voice> voice_map;
 	Global_parameters global_parameters;
-	//Filter filter {1000,(float)0.0};
 	Clocks::SystemClock_Config();
 	try{
 		voice_map[1] = Voice(global_parameters, 1000, 1.0);
@@ -60,7 +59,6 @@ void Tests::output_waveform() {
 			total += (float) 1 * pair.second.update_and_get_sample(sample_tick_local);	
 		}
 		const float total_rel = total * (float) 0.5 + (float) 0.5; 	
-		//const float filtered_rel = filter.next_sample(total_rel);
 		dac1.set_value_rel(total_rel);
 	}
 }

@@ -1,5 +1,7 @@
 #include "Voice.h"
 
+//Construct new voice
+//This will be placed in the voice map in main
 Voice::Voice(const Global_parameters& global_parameters, const uint32_t& freq, const float &velocity)
 	: global_parameters(global_parameters), freq_1 (freq), freq_2 (freq), velocity(velocity)
 {
@@ -9,7 +11,7 @@ Voice::Voice(const Global_parameters& global_parameters, const uint32_t& freq, c
 	phase_rel_per_tick_2 = freq_2 / global_parameters.sample_tick_freq;
 	try {
 		//TODO: These will also need to be set with dial
-
+		//Set wave object pointers based on the type of wave requested
 		switch(global_parameters.wave_1_type) {
 		case sine_wave :
 			wave_1 = std::shared_ptr<Wave> { new Sine() };
@@ -32,6 +34,9 @@ Voice::Voice(const Global_parameters& global_parameters, const uint32_t& freq, c
 	}
 }
 
+//This function updates the phase and sample tick variables to the latest situation
+//(function has side effects)
+//The current sample is then calculated
 float Voice::update_and_get_sample(const uint64_t sample_tick) {
 	//coded to prevent costly int to float conversion and fmod
 	//allows recovery from missed sample ticks
