@@ -8,7 +8,7 @@ Audio sythesiser for STM32 microcontroller
 - Polyphonic.
 - Two oscillators with independent waveforms.
 - 2 pole IIR filter.
-- Output through ADC
+- Output through DAC
 
 Entry point:
 
